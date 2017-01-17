@@ -222,9 +222,9 @@ class ViewController: UIViewController {
 //        let predicate : NSPredicate = NSPredicate(format: "TagRef in %@", tagRefs)
         
         let predicate : NSPredicate = NSPredicate(format: "enfocaId == %@ AND TagRef in %@", enfocaId, tagRefs)
-        let sort : NSSortDescriptor = NSSortDescriptor(key: "Word", ascending: true)
+//        let sort : NSSortDescriptor = NSSortDescriptor(key: "Word", ascending: true)
         let query: CKQuery = CKQuery(recordType: "SimpleTagAss", predicate: predicate)
-        query.sortDescriptors = [sort]
+//        query.sortDescriptors = [sort]
         db.perform(query, inZoneWith: nil) { (records : [CKRecord]?, error : Error?) in
             if let error = error {
                 print("Error \(error)")
@@ -255,9 +255,9 @@ class ViewController: UIViewController {
         
         self.pairs.removeAll()
         
-        
+        let sort : NSSortDescriptor = NSSortDescriptor(key: "Word", ascending: true)
         let query: CKQuery = CKQuery(recordType: "SimpleWordPair", predicate: predicate)
-        
+        query.sortDescriptors = [sort]
         
         db.perform(query, inZoneWith: nil) { (records : [CKRecord]?, error : Error?) in
             if let error = error {
