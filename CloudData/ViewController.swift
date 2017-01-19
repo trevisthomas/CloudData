@@ -14,7 +14,7 @@ import CloudKit
  
  Figure out how to update the user record.
  Figure out how to generate an enfocaId for new users
- Implement pagination
+ Implement pagination - Done.  QueryOperation is your frind.
  */
  
 
@@ -29,6 +29,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var wordTextField: UITextField!
     @IBOutlet weak var definitionTextField: UITextField!
+    
+    @IBOutlet weak var moreButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,6 +77,25 @@ class ViewController: UIViewController {
     
     @IBAction func dismissKeyboard(){
         self.view.endEditing(true)
+    }
+    
+    var cursor : CKQueryCursor? {
+        didSet{
+            OperationQueue.main.addOperation({
+                if self.cursor != nil {
+                    self.moreButton.isEnabled = true
+                } else {
+                    self.moreButton.isEnabled = false
+                }
+            })
+        }
+    }
+    
+    @IBAction func moreButtonAction(_ sender: Any) {
+        self.loadCloudDataWordPairs(referenceIds: nil, cursor: self.cursor, callback: { (cursor : CKQueryCursor) in
+            self.cursor = cursor
+        })
+        self.cursor = nil
     }
     
     private func reloadAll() {
@@ -171,60 +192,21 @@ class ViewController: UIViewController {
     }
     
     func loadCloudDataWordPairs(){
-        let predicate : NSPredicate = NSPredicate(format: "enfocaId = %@", enfocaId)
-        let sort : NSSortDescriptor = NSSortDescriptor(key: "Word", ascending: true)
-        let query: CKQuery = CKQuery(recordType: "SimpleWordPair", predicate: predicate)
-        query.sortDescriptors = [sort]
-        
-        
-        //Trevis.  CKQuery operation takes a query or a cursor.  I believe that the cursor allows your pagination functionality.  
-        // take a look at the use of CKQueryOperation in this tutorial
-        //https://www.hackingwithswift.com/read/33/6/reading-from-icloud-with-cloudkit-ckqueryoperation-and-nspredicate
-        
-//        let qop = CKQueryOperation(query: query)
-//        qop.resultsLimit = 2
-        
-        db.perform(query, inZoneWith: nil) { (records : [CKRecord]?, error : Error?) in
-            if let error = error {
-                print("Error \(error)")
-                return
-            }
-            
-            guard let records = records, records.count > 0 else {
-                print("Records is nil")
-                return
-            }
-            
-            OperationQueue.main.addOperation({
-                self.pairs.removeAll()
-                
-                for record in records {
-                    self.pairs.append(self.toWordPair(from: record))
-                }
-                self.tableView.reloadData()
-            })
-        }
+        self.cursor = nil
+        self.loadCloudDataWordPairs(referenceIds: nil, cursor: nil, callback: { (cursor : CKQueryCursor) in
+            self.cursor = cursor
+        })
     }
+    
     
     func loadCloudDataWordPairs(with tags : [Tag]){
         //CKRecordID's should be querried with CKReferences.
         let tagRefs : [CKReference] = tags.map { (tag: Tag) -> CKReference in
             return CKReference(recordID: tag.recordId, action: .none)
         }
-        
-//        let predicate : NSPredicate = NSPredicate(format: "tags IN %@", argumentArray: tagIds)
-//        let predicate : NSPredicate = NSPredicate(format: "tags IN %@", tagIds[0])
-//        let predicate : NSPredicate = NSPredicate(format: "tagRef IN %@", argumentArray: tagIds)
-//        let predicate : NSPredicate = NSPredicate(format: "TagRef == %@", tagIds[0]) 
-        
-//        let predicate : NSPredicate = NSPredicate(format: "TagRef == %@", argumentArray: tagIds)
-        
-//        let predicate : NSPredicate = NSPredicate(format: "TagRef in %@", tagRefs)
-        
+
         let predicate : NSPredicate = NSPredicate(format: "enfocaId == %@ AND TagRef in %@", enfocaId, tagRefs)
-//        let sort : NSSortDescriptor = NSSortDescriptor(key: "Word", ascending: true)
         let query: CKQuery = CKQuery(recordType: "SimpleTagAss", predicate: predicate)
-//        query.sortDescriptors = [sort]
         db.perform(query, inZoneWith: nil) { (records : [CKRecord]?, error : Error?) in
             if let error = error {
                 print("Error \(error)")
@@ -236,53 +218,80 @@ class ViewController: UIViewController {
                 return
             }
             
-            var recordIds : [CKReference] = []
+            var referenceIds : [CKReference] = []
             for record in records {
                 let wordRef = record.value(forKey: "WordRef") as! CKReference
-                recordIds.append(wordRef)
+                referenceIds.append(wordRef)
             }
             
-            self.loadCloudDataWordPairs(recordIds : recordIds)
+            self.cursor = nil
+            self.loadCloudDataWordPairs(referenceIds: referenceIds, cursor: nil, callback: { (cursor : CKQueryCursor) in
+                self.cursor = cursor
+            })
         }
     }
     
-    func loadCloudDataWordPairs(recordIds : [CKReference]){
+
+    func loadCloudDataWordPairs(referenceIds : [CKReference]?, cursor : CKQueryCursor? = nil, callback: @escaping (CKQueryCursor)->()){
         
-//        https://developer.apple.com/reference/cloudkit/ckquery#//apple_ref/occ/cl/CKQuery
-//        http://stackoverflow.com/questions/32900235/how-to-query-cloudkit-for-recordid-in-ckrecordid
+        //        https://developer.apple.com/reference/cloudkit/ckquery#//apple_ref/occ/cl/CKQuery
+        //        http://stackoverflow.com/questions/32900235/how-to-query-cloudkit-for-recordid-in-ckrecordid
         
-        let predicate : NSPredicate = NSPredicate(format: "recordID IN %@", recordIds)
         
-        self.pairs.removeAll()
+        let operation : CKQueryOperation
         
-        let sort : NSSortDescriptor = NSSortDescriptor(key: "Word", ascending: true)
-        let query: CKQuery = CKQuery(recordType: "SimpleWordPair", predicate: predicate)
-        query.sortDescriptors = [sort]
+        if let cursor = cursor {
+            operation = CKQueryOperation(cursor: cursor)
+        } else {
+            self.pairs.removeAll()
+            if let referenceIds = referenceIds {
+                let predicate : NSPredicate = NSPredicate(format: "enfocaId == %@ AND recordID IN %@", enfocaId, referenceIds)
+                let sort : NSSortDescriptor = NSSortDescriptor(key: "Word", ascending: true)
+                let query: CKQuery = CKQuery(recordType: "SimpleWordPair", predicate: predicate)
+                query.sortDescriptors = [sort]
+                operation = CKQueryOperation(query: query)
+            } else {
+                let predicate : NSPredicate = NSPredicate(format: "enfocaId == %@", enfocaId)
+                let sort : NSSortDescriptor = NSSortDescriptor(key: "Word", ascending: true)
+                let query: CKQuery = CKQuery(recordType: "SimpleWordPair", predicate: predicate)
+                query.sortDescriptors = [sort]
+                operation = CKQueryOperation(query: query)
+            }
+        }
         
-        db.perform(query, inZoneWith: nil) { (records : [CKRecord]?, error : Error?) in
+        
+        operation.resultsLimit = 4
+        
+        operation.recordFetchedBlock = {record in
+            OperationQueue.main.addOperation({
+                self.pairs.append(self.toWordPair(from: record))
+                self.tableView.reloadData()
+            })
+        }
+        
+        operation.queryCompletionBlock = {(cursor, error) in
             if let error = error {
                 print("Error \(error)")
-                return
-            }
-            
-            guard let records = records, records.count > 0 else {
-                print("Records is nil")
                 return
             }
             
             OperationQueue.main.addOperation({
-                for record in records {
-                    self.pairs.append(self.toWordPair(from: record))
-                }
                 self.tableView.reloadData()
             })
+            
+            guard let cursor = cursor else {
+                print("All records loaded")
+                return
+            }
+            callback(cursor)
+            
         }
+        
+        db.add(operation)
     }
 
     
-    
     func loadCloudDataTags(callback : @escaping () -> ()){
-//        let predicate : NSPredicate = NSPredicate(value: true)
         let sort : NSSortDescriptor = NSSortDescriptor(key: "Name", ascending: true)
         let predicate : NSPredicate = NSPredicate(format: "enfocaId == %@", enfocaId)
         

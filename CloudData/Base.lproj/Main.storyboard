@@ -126,6 +126,14 @@
                                     <action selector="clearFilterAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ezt-35-XGY"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cVM-l9-ftu">
+                                <rect key="frame" x="195" y="451" width="36" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="More"/>
+                                <connections>
+                                    <action selector="moreButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Py3-7Y-jEL"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -135,6 +143,7 @@
                     </view>
                     <connections>
                         <outlet property="definitionTextField" destination="dBd-Qa-P5j" id="mQx-aP-JP6"/>
+                        <outlet property="moreButton" destination="cVM-l9-ftu" id="4Ym-Qf-wdQ"/>
                         <outlet property="pickerView" destination="Gkl-fx-8Gi" id="Rox-Cj-4Eh"/>
                         <outlet property="tableView" destination="jfV-hK-IOG" id="Q2X-7f-0PB"/>
                         <outlet property="wordTextField" destination="BgM-d5-fDP" id="OsX-tI-jnS"/>
