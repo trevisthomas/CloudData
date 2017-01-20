@@ -48,6 +48,10 @@ class ViewController: UIViewController {
             self.reloadAll()
         }
     }
+    
+   
+    
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -114,11 +118,67 @@ class ViewController: UIViewController {
             }
             self.db.fetch(withRecordID: recordId!, completionHandler: { (record: CKRecord?, error: Error?) in
                 guard let id = record?.value(forKey: "enfocaId") as? Int else {
-                    completion(nil)
+                    self.createEnfocaId(callback: completion)
                     return
                 }
                 completion(id)
             })
+        }
+    }
+    
+    func createEnfocaId(callback: @escaping (Int?) -> ()){
+        let settingsId = CKRecordID(recordName: "9ea8a03a-9867-4365-8ece-94380971bc13")
+        
+        
+        self.db.fetch(withRecordID: settingsId, completionHandler: { (record: CKRecord?, error: Error?) in
+            guard let id = record?.value(forKey: "Seed") as? Int, let record = record else {
+                callback(nil)
+                return
+            }
+            let enfocaId = id + 1
+            record.setValue(enfocaId, forKey: "Seed")
+            self.db.save(record, completionHandler: { (record:CKRecord?, error:Error?) in
+                if let error = error {
+                    print(error)
+                    fatalError() //Handle error.  Here is where we'd end up if the error record was updated while you were updating it
+                }
+                self.updateUserRecord(enfocaId: enfocaId, callback: { (success: Bool) in
+                    if success {
+                        callback(enfocaId)
+                    } else {
+                        fatalError()//Failed to save the record to the user!
+                    }
+                })
+                
+            })
+        })
+    }
+    
+    
+    //Returns true to callback if record update was successfull
+    func updateUserRecord(enfocaId: Int, callback: @escaping(Bool)->()){
+        CKContainer.default().fetchUserRecordID { (recordId: CKRecordID?, error:Error?) in
+            if error != nil {
+                print("Error while loading user: \(error)")
+                callback(false)
+                return
+            }
+            
+            self.db.fetch(withRecordID: recordId!, completionHandler: { (record: CKRecord?, error: Error?) in
+                guard let record = record else {
+                    callback(false)
+                    return
+                }
+                record.setValue(enfocaId, forKey: "enfocaId")
+                self.db.save(record, completionHandler: { (record:CKRecord?, error:Error?) in
+                    if let error = error {
+                        print(error)
+                        fatalError() //Failed to update.   What to do!?
+                    }
+                    callback(true)
+                })
+            })
+            
             
         }
     }
@@ -305,6 +365,7 @@ class ViewController: UIViewController {
             
             guard let records = records, records.count > 0 else {
                 print("Records is nil")
+                callback() //Done
                 return
             }
             
