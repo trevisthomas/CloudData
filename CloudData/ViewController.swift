@@ -11,10 +11,8 @@ import CloudKit
 
 /*
  TODO:
- 
- Figure out how to update the user record.
- Figure out how to generate an enfocaId for new users
- Implement pagination - Done.  QueryOperation is your frind.
+    Externalize DB from operations.  Not that important here but when you unit test them you'll be better off that way.
+    Use CKQueryOperations for loading the tags and initial page of pairs
  */
  
 
@@ -35,18 +33,13 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        self.enfocaId = NSNumber(value: OperationsDemo.authentcate())
+        print("Loaded enfoca user: \(self.enfocaId)")
+        
         db = CKContainer.default().publicCloudDatabase
         
-        loadUser { (id: Int?) in
-            guard let id = id else {
-                print("Not logged in")
-                fatalError() //Not logged in
-            }
-            
-            self.enfocaId = NSNumber(value: id)
-            print("Loaded enfoca user: \(self.enfocaId)")
-            self.reloadAll()
-        }
+        self.reloadAll()
     }
     
    
@@ -103,85 +96,14 @@ class ViewController: UIViewController {
     }
     
     private func reloadAll() {
+        
+        
         //Trevis, with icloud i think that you can bundle these calls together
         loadCloudDataTags {
             self.loadCloudDataWordPairs()
         }
     }
     
-    func loadUser(completion: @escaping (Int?)->()) {
-        CKContainer.default().fetchUserRecordID { (recordId: CKRecordID?, error:Error?) in
-            if error != nil {
-                print("Error while loading user: \(error)")
-                completion(nil)
-                return
-            }
-            self.db.fetch(withRecordID: recordId!, completionHandler: { (record: CKRecord?, error: Error?) in
-                guard let id = record?.value(forKey: "enfocaId") as? Int else {
-                    self.createEnfocaId(callback: completion)
-                    return
-                }
-                completion(id)
-            })
-        }
-    }
-    
-    func createEnfocaId(callback: @escaping (Int?) -> ()){
-        let settingsId = CKRecordID(recordName: "9ea8a03a-9867-4365-8ece-94380971bc13")
-        
-        
-        self.db.fetch(withRecordID: settingsId, completionHandler: { (record: CKRecord?, error: Error?) in
-            guard let id = record?.value(forKey: "Seed") as? Int, let record = record else {
-                callback(nil)
-                return
-            }
-            let enfocaId = id + 1
-            record.setValue(enfocaId, forKey: "Seed")
-            self.db.save(record, completionHandler: { (record:CKRecord?, error:Error?) in
-                if let error = error {
-                    print(error)
-                    fatalError() //Handle error.  Here is where we'd end up if the error record was updated while you were updating it
-                }
-                self.updateUserRecord(enfocaId: enfocaId, callback: { (success: Bool) in
-                    if success {
-                        callback(enfocaId)
-                    } else {
-                        fatalError()//Failed to save the record to the user!
-                    }
-                })
-                
-            })
-        })
-    }
-    
-    
-    //Returns true to callback if record update was successfull
-    func updateUserRecord(enfocaId: Int, callback: @escaping(Bool)->()){
-        CKContainer.default().fetchUserRecordID { (recordId: CKRecordID?, error:Error?) in
-            if error != nil {
-                print("Error while loading user: \(error)")
-                callback(false)
-                return
-            }
-            
-            self.db.fetch(withRecordID: recordId!, completionHandler: { (record: CKRecord?, error: Error?) in
-                guard let record = record else {
-                    callback(false)
-                    return
-                }
-                record.setValue(enfocaId, forKey: "enfocaId")
-                self.db.save(record, completionHandler: { (record:CKRecord?, error:Error?) in
-                    if let error = error {
-                        print(error)
-                        fatalError() //Failed to update.   What to do!?
-                    }
-                    callback(true)
-                })
-            })
-            
-            
-        }
-    }
 
     @IBAction func tagSelectedWord(_ sender: Any) {
         guard let ip = tableView.indexPathForSelectedRow else {

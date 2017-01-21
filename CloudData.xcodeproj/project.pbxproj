@@ -14,6 +14,15 @@
 		0F50452A1E27F2E7007030CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0F5045281E27F2E7007030CD /* LaunchScreen.storyboard */; };
 		0F5045341E27F32B007030CD /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5045331E27F32B007030CD /* CloudKit.framework */; };
 		0F5045361E281691007030CD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F5045351E281691007030CD /* Models.swift */; };
+		0F64F18D1E329D91000549CF /* CloudAuthOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F18C1E329D91000549CF /* CloudAuthOperation.swift */; };
+		0F64F18F1E32C66C000549CF /* BaseOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F18E1E32C66C000549CF /* BaseOperation.swift */; };
+		0F64F1911E32C8FD000549CF /* FetchUserRecordOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F1901E32C8FD000549CF /* FetchUserRecordOperation.swift */; };
+		0F64F1931E32D490000549CF /* FetchUserRecordId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F1921E32D490000549CF /* FetchUserRecordId.swift */; };
+		0F64F1951E32DAC7000549CF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F1941E32DAC7000549CF /* User.swift */; };
+		0F64F1971E32DF97000549CF /* OperationsDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F1961E32DF97000549CF /* OperationsDemo.swift */; };
+		0F64F19A1E33E615000549CF /* FetchOrCreateEnfocaId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F1991E33E615000549CF /* FetchOrCreateEnfocaId.swift */; };
+		0F64F19E1E33EC70000549CF /* BaseUserOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F19D1E33EC70000549CF /* BaseUserOperation.swift */; };
+		0F64F1A21E3407BD000549CF /* FetchIncrementAndSaveSeedIfNecessary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F1A11E3407BD000549CF /* FetchIncrementAndSaveSeedIfNecessary.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +36,15 @@
 		0F5045311E27F31A007030CD /* CloudData.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CloudData.entitlements; sourceTree = "<group>"; };
 		0F5045331E27F32B007030CD /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		0F5045351E281691007030CD /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		0F64F18C1E329D91000549CF /* CloudAuthOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudAuthOperation.swift; sourceTree = "<group>"; };
+		0F64F18E1E32C66C000549CF /* BaseOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseOperation.swift; sourceTree = "<group>"; };
+		0F64F1901E32C8FD000549CF /* FetchUserRecordOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchUserRecordOperation.swift; sourceTree = "<group>"; };
+		0F64F1921E32D490000549CF /* FetchUserRecordId.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchUserRecordId.swift; sourceTree = "<group>"; };
+		0F64F1941E32DAC7000549CF /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		0F64F1961E32DF97000549CF /* OperationsDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationsDemo.swift; sourceTree = "<group>"; };
+		0F64F1991E33E615000549CF /* FetchOrCreateEnfocaId.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchOrCreateEnfocaId.swift; sourceTree = "<group>"; };
+		0F64F19D1E33EC70000549CF /* BaseUserOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseUserOperation.swift; sourceTree = "<group>"; };
+		0F64F1A11E3407BD000549CF /* FetchIncrementAndSaveSeedIfNecessary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchIncrementAndSaveSeedIfNecessary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +87,8 @@
 				0F5045281E27F2E7007030CD /* LaunchScreen.storyboard */,
 				0F50452B1E27F2E7007030CD /* Info.plist */,
 				0F5045351E281691007030CD /* Models.swift */,
+				0F64F1981E32DFA3000549CF /* CloudKitOperations */,
+				0F64F1961E32DF97000549CF /* OperationsDemo.swift */,
 			);
 			path = CloudData;
 			sourceTree = "<group>";
@@ -79,6 +99,21 @@
 				0F5045331E27F32B007030CD /* CloudKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0F64F1981E32DFA3000549CF /* CloudKitOperations */ = {
+			isa = PBXGroup;
+			children = (
+				0F64F18E1E32C66C000549CF /* BaseOperation.swift */,
+				0F64F19D1E33EC70000549CF /* BaseUserOperation.swift */,
+				0F64F18C1E329D91000549CF /* CloudAuthOperation.swift */,
+				0F64F1901E32C8FD000549CF /* FetchUserRecordOperation.swift */,
+				0F64F1921E32D490000549CF /* FetchUserRecordId.swift */,
+				0F64F1941E32DAC7000549CF /* User.swift */,
+				0F64F1991E33E615000549CF /* FetchOrCreateEnfocaId.swift */,
+				0F64F1A11E3407BD000549CF /* FetchIncrementAndSaveSeedIfNecessary.swift */,
+			);
+			name = CloudKitOperations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -162,9 +197,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F64F19A1E33E615000549CF /* FetchOrCreateEnfocaId.swift in Sources */,
+				0F64F1911E32C8FD000549CF /* FetchUserRecordOperation.swift in Sources */,
+				0F64F1971E32DF97000549CF /* OperationsDemo.swift in Sources */,
+				0F64F1931E32D490000549CF /* FetchUserRecordId.swift in Sources */,
 				0F5045361E281691007030CD /* Models.swift in Sources */,
 				0F5045221E27F2E7007030CD /* ViewController.swift in Sources */,
+				0F64F1A21E3407BD000549CF /* FetchIncrementAndSaveSeedIfNecessary.swift in Sources */,
+				0F64F1951E32DAC7000549CF /* User.swift in Sources */,
 				0F5045201E27F2E7007030CD /* AppDelegate.swift in Sources */,
+				0F64F19E1E33EC70000549CF /* BaseUserOperation.swift in Sources */,
+				0F64F18D1E329D91000549CF /* CloudAuthOperation.swift in Sources */,
+				0F64F18F1E32C66C000549CF /* BaseOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,6 +374,7 @@
 				0F5045301E27F2E7007030CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
