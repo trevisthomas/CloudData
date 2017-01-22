@@ -39,6 +39,15 @@ class ViewController: UIViewController {
         
         db = CKContainer.default().publicCloudDatabase
         
+        let q = OperationQueue()
+        let fetchOp = OperationFetchTags(enfocaId: enfocaId, db: db)
+        let completeOp = BlockOperation { 
+            print ("Tags loaded: \(fetchOp.tags)")
+        }
+        completeOp.addDependency(fetchOp)
+        
+        q.addOperations([fetchOp, completeOp], waitUntilFinished: false)
+        
         self.reloadAll()
     }
     
@@ -304,6 +313,7 @@ class ViewController: UIViewController {
         }
 
     }
+    
     
     func cloudKitTagWordPair(wordPair : WordPair, tag: Tag){
         //load the word pair
