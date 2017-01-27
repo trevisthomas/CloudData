@@ -24,6 +24,7 @@
 		0F64F19E1E33EC70000549CF /* BaseUserOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F19D1E33EC70000549CF /* BaseUserOperation.swift */; };
 		0F64F1A21E3407BD000549CF /* FetchIncrementAndSaveSeedIfNecessary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F1A11E3407BD000549CF /* FetchIncrementAndSaveSeedIfNecessary.swift */; };
 		0F64F1A61E350CFD000549CF /* OperationFetchTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F1A51E350CFD000549CF /* OperationFetchTags.swift */; };
+		0F64F1A81E36AC88000549CF /* ReadWriteMutex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F64F1A71E36AC88000549CF /* ReadWriteMutex.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		0F64F19D1E33EC70000549CF /* BaseUserOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseUserOperation.swift; sourceTree = "<group>"; };
 		0F64F1A11E3407BD000549CF /* FetchIncrementAndSaveSeedIfNecessary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchIncrementAndSaveSeedIfNecessary.swift; sourceTree = "<group>"; };
 		0F64F1A51E350CFD000549CF /* OperationFetchTags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationFetchTags.swift; sourceTree = "<group>"; };
+		0F64F1A71E36AC88000549CF /* ReadWriteMutex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadWriteMutex.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 				0F64F18E1E32C66C000549CF /* BaseOperation.swift */,
 				0F64F1A41E350C19000549CF /* CloudKit */,
 				0F64F1A31E350BEC000549CF /* Authentication */,
+				0F64F1A71E36AC88000549CF /* ReadWriteMutex.swift */,
 			);
 			name = Operations;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				0F64F19E1E33EC70000549CF /* BaseUserOperation.swift in Sources */,
 				0F64F18D1E329D91000549CF /* CloudAuthOperation.swift in Sources */,
 				0F64F18F1E32C66C000549CF /* BaseOperation.swift in Sources */,
+				0F64F1A81E36AC88000549CF /* ReadWriteMutex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

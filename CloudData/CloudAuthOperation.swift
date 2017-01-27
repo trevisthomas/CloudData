@@ -13,15 +13,15 @@ import CloudKit
 
 class CloudAuthOperation : BaseUserOperation {
     override func start() {
-        isExecuting = true
+        state = .inProgress
         
         if isCancelled {
-            isFinished = true
+            state = .done
             return
         }
         
         if user.isAuthenticated {
-            isFinished = true
+            state = .done
             return
         }
         
@@ -31,8 +31,7 @@ class CloudAuthOperation : BaseUserOperation {
             } else {
                 self.accountStatus(status)
             }
-            self.isExecuting = false
-            self.isFinished = true
+            self.state = .done
         })
     }
     

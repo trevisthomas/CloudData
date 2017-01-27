@@ -20,7 +20,7 @@ class OperationFetchTags : BaseOperation {
     }
     
     override func start() {
-        isExecuting = true
+        state = .inProgress
         
         let sort : NSSortDescriptor = NSSortDescriptor(key: "Name", ascending: true)
         let predicate : NSPredicate = NSPredicate(format: "enfocaId == %@", enfocaId)

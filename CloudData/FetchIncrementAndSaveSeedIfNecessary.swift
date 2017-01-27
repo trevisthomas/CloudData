@@ -10,7 +10,6 @@ import Foundation
 import CloudKit
 
 class FetchIncrementAndSaveSeedIfNecessary : BaseUserOperation {
-//    var newEnfocaId : Int?
     
     override func start() {
         if let _ = user.record.value(forKey: "enfocaId") as? Int {
@@ -20,7 +19,7 @@ class FetchIncrementAndSaveSeedIfNecessary : BaseUserOperation {
         }
         
         let db = CKContainer.default().publicCloudDatabase
-        isExecuting = true
+        state = .inProgress
         
         let settingsId = CKRecordID(recordName: "9ea8a03a-9867-4365-8ece-94380971bc13")
         

@@ -12,7 +12,7 @@ import CloudKit
 class FetchOrCreateEnfocaId : BaseUserOperation {
     
     override func start() {
-        isExecuting = true
+        state = .inProgress
         
         if let id = user.record.value(forKey: "enfocaId") as? Int {
             user.enfocaId = id

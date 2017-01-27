@@ -12,7 +12,7 @@ import CloudKit
 class FetchUserRecordOperation : BaseUserOperation {
     
     override func start() {
-        isExecuting = true
+        state = .inProgress
         
         if let _ = user.record {
             self.done()
