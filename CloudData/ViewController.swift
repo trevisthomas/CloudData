@@ -39,9 +39,12 @@ class ViewController: UIViewController {
         
         db = CKContainer.default().publicCloudDatabase
         
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        
         let q = OperationQueue()
         let fetchOp = OperationFetchTags(enfocaId: enfocaId, db: db)
-        let completeOp = BlockOperation { 
+        let completeOp = BlockOperation {
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
             print ("Tags loaded: \(fetchOp.tags)")
         }
         completeOp.addDependency(fetchOp)
@@ -191,6 +194,8 @@ class ViewController: UIViewController {
     
     
     func loadCloudDataWordPairs(with tags : [Tag]){
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        
         //CKRecordID's should be querried with CKReferences.
         let tagRefs : [CKReference] = tags.map { (tag: Tag) -> CKReference in
             return CKReference(recordID: tag.recordId, action: .none)
@@ -218,6 +223,7 @@ class ViewController: UIViewController {
             self.cursor = nil
             self.loadCloudDataWordPairs(referenceIds: referenceIds, cursor: nil, callback: { (cursor : CKQueryCursor) in
                 self.cursor = cursor
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             })
         }
     }
@@ -402,7 +408,12 @@ class ViewController: UIViewController {
 extension ViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WordPairCell")
-        let wp = pairs[indexPath.row] 
+        let wp = pairs[indexPath.row]
+        
+        let indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        cell?.accessoryView = indicator
+//        indicator.startAnimating()
+        
         
         cell?.textLabel?.text = "\(wp.word) : \(wp.definition)"
         cell?.detailTextLabel?.text = wp.tags.description
